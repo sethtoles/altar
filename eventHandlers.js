@@ -19,6 +19,8 @@ function addListeners() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     window.addEventListener('resize', handleResize);
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
     window.addEventListener('mouseup', handleClick);
 
     function handleKeyDown(event) {
@@ -73,4 +75,12 @@ function addListeners() {
 function handleResize(event) {
     elements.canvas.width = window.innerWidth;
     elements.canvas.height = window.innerHeight;
+}
+
+function handleFocus() {
+    utils.clearHeld();
+}
+
+function handleBlur() {
+    utils.clearHeld();
 }

@@ -114,6 +114,7 @@
 
         function togglePause() {
             scene.paused = !scene.paused;
+            utils.clearHeld();
 
             if (scene.paused) {
                 clearScreen(COLOR.BLACK);
