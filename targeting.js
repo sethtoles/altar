@@ -38,8 +38,10 @@
     }
 
     function clearTargets() {
-        if (this.targets.length) {
-            this.targets.forEach(this.removeTarget.bind(this));
+        const { length } = this.targets;
+
+        for (let i = length - 1; i >= 0; i--) {
+            this.removeTarget(this.targets[i]);
         }
     }
 
@@ -56,7 +58,8 @@
                 && Math.abs(directionY) < speed
             ) {
                 this.removeTarget(target);
-            } else {
+            }
+            else {
                 this.moveToward(directionX, directionY);
             }
         }

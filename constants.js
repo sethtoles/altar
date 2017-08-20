@@ -10,7 +10,10 @@ const FONT = {
 const DEFAULT_PROP = {
     WIDTH: 32,
     HEIGHT: 32,
+    ZOOM: 1,
 };
+
+const NUDGE = 0.00001;
 
 const WORLD_MAP = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],

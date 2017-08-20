@@ -2,17 +2,20 @@
     global.playerFactory = playerFactory;
 
     function playerFactory(options) {
-        const PLAYER_DEFAULTS = {
+        const character = characterFactory();
+        const player = {
+            // Base
+            ...character,
+            // Property Defaults
             x: 512,
             y: 512,
             tile: TILES.player,
-        };
-
-        const character = characterFactory();
-        const player = Object.assign(character, PLAYER_DEFAULTS, options);
-
-        player.processFrame = processFrame.bind(player);
-        player.checkForMovement = checkForMovement.bind(player);
+            // Methods
+            processFrame,
+            checkForMovement,
+            // Overrides
+            ...options,
+        }
 
         return player;
     }
@@ -27,14 +30,19 @@
         const up = !!held[KEY.W];
         const down = !!held[KEY.S];
 
-        this.sprinting = !!held[KEY.SHIFT];
+        this.isSprinting = !!held[KEY.SHIFT];
+
+        const hasTarget = this.canTarget && this.hasTarget();
 
         if (right || left || up || down) {
+            this.clearTargets();
+
             this.moveToward(
                 right - left,
                 up - down
             );
-        } else if (this.targeting && this.hasTarget()) {
+        }
+        else if (hasTarget) {
             this.approachTarget();
         }
     }

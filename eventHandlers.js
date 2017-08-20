@@ -47,14 +47,14 @@ function addListeners() {
     }
 
     function handleClick(event) {
-        if (!paused) {
+        if (!scene.paused) {
             getWorldCoordinates(event);
         }
     }
 
     function getWorldCoordinates(event) {
         const { clientX, clientY } = event;
-        const { camera } = scene;
+        const { camera, player } = scene;
         const x = camera.x + (clientX / camera.zoom);
         const y = camera.y + (clientY / camera.zoom);
 
@@ -71,6 +71,6 @@ function addListeners() {
 }
 
 function handleResize(event) {
-    el.canvas.width = window.innerWidth;
-    el.canvas.height = window.innerHeight;
+    elements.canvas.width = window.innerWidth;
+    elements.canvas.height = window.innerHeight;
 }

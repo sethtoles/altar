@@ -1,19 +1,22 @@
 function cameraFactory(options) {
-    const CAMERA_DEFAULTS = {
-        zoom: 1,
+    const gameObject = gameObjectFactory();
+    const camera = {
+        // Base
+        ...gameObject,
+        // Property Defaults
+        zoom: DEFAULT_PROP.ZOOM,
         maxZoom: 5,
         minZoom: 0.8,
         zoomRate: 0.2,
-    };
-
-    const gameObject = gameObjectFactory();
-    const camera = Object.assign(gameObject, CAMERA_DEFAULTS, options);
-
-    camera.zoomIn = zoomIn.bind(camera);
-    camera.zoomOut = zoomOut.bind(camera);
-    camera.resetZoom = resetZoom.bind(camera);
-    camera.zoomChanged = zoomChanged.bind(camera);
-    camera.follow = follow.bind(camera);
+        // Methods
+        zoomIn,
+        zoomOut,
+        resetZoom,
+        zoomChanged,
+        follow,
+        // Overrides
+        ...options,
+    }
 
     return camera;
 
@@ -34,7 +37,7 @@ function cameraFactory(options) {
     }
 
     function resetZoom() {
-        this.zoom = CAMERA_DEFAULTS.zoom;
+        this.zoom = DEFAULT_PROP.ZOOM;
 
         this.zoomChanged()
     }
@@ -42,21 +45,22 @@ function cameraFactory(options) {
     function zoomChanged() {
         ctx.imageSmoothingEnabled = this.zoom <= 1;
 
-        this.width = el.canvas.width / this.zoom;
-        this.height = el.canvas.height / this.zoom;
+        this.width = elements.canvas.width / this.zoom;
+        this.height = elements.canvas.height / this.zoom;
 
-        this.follow(player);
+        this.follow(scene.player);
     }
 
     function follow(gameObject, smooth) {
         const scale = 2 * this.zoom;
-        const newX = gameObject.x + (gameObject.width / 2) - (el.canvas.width / scale);
-        const newY = gameObject.y + (gameObject.height / 2) - (el.canvas.height / scale);
+        const newX = gameObject.x + (gameObject.width / 2) - (elements.canvas.width / scale);
+        const newY = gameObject.y + (gameObject.height / 2) - (elements.canvas.height / scale);
 
         if (smooth) {
             this.x = newX + ((this.x - newX) * 0.95);
             this.y = newY + ((this.y - newY) * 0.95);
-        } else {
+        }
+        else {
             this.x = newX;
             this.y = newY;
         }
