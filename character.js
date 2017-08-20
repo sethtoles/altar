@@ -1,26 +1,28 @@
 ((global) => {
     global.characterFactory = characterFactory;
 
-    function characterFactory(options) {
-        const gameObject = gameObjectFactory({
-            canCollide: true,
-        });
+    const CHARACTER_DEFAULTS = {
+        canMove: true,
+        canTarget: true,
+        canCollide: true,
+        baseSpeed: 1,
+        sprintSpeed: 3,
+        isSprinting: false,
+        tileSet: [
+            {
+                tile: TILES.character,
+            },
+        ],
+        getSpeed,
+    };
 
-        const character = {
-            // Base
-            ...gameObject,
-            // Property Defaults
-            canMove: true,
-            canTarget: true,
-            baseSpeed: 1,
-            sprintSpeed: 3,
-            isSprinting: false,
-            tile: TILES.character,
-            // Methods
-            getSpeed,
-            // Overrides
+    function characterFactory(options) {
+        const characterProps = {
+            ...CHARACTER_DEFAULTS,
             ...options,
         };
+
+        const character = gameObjectFactory(characterProps);
 
         if (character.canMove) {
             character.moveToward = moveToward;

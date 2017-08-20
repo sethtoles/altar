@@ -67,7 +67,11 @@ function addListeners() {
         player.addTarget({
             x: x - (player.width / 2),
             y: y - (player.height / 2),
-            tile: TILES.character,
+            tileSet: [
+                {
+                    tile: TILES.target,
+                },
+            ],
         });
     }
 }

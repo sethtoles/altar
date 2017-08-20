@@ -10,12 +10,15 @@
             canCollide: false,
             move,
             intersects,
-            render,
             ...options,
         };
 
         if (gameObject.canCollide) {
             gameObject.containers = [];
+        }
+
+        if (gameObject.tileSet) {
+            global.makeRenderable(gameObject);
         }
 
         return gameObject;
@@ -73,25 +76,5 @@
         const horizontalOverlap = (right >= targetLeft) && (left <= targetRight);
 
         return (verticalOverlap && horizontalOverlap);
-    }
-
-    function render(camera) {
-        if (
-            !this.tile
-            || this.x > camera.x + camera.width
-            || this.y > camera.y + camera.height
-            || this.x + this.width < camera.x
-            || this.y + this.height < camera.y
-        ) {
-            return;
-        }
-
-        ctx.drawImage(
-            this.tile.image,
-            (Math.round(this.x) - camera.x) * camera.zoom,
-            (Math.round(this.y) - camera.y) * camera.zoom,
-            this.width * camera.zoom,
-            this.height * camera.zoom
-        );
     }
 })(window);

@@ -1,23 +1,30 @@
 ((global) => {
     global.playerFactory = playerFactory;
 
-    function playerFactory(options) {
-        const character = characterFactory();
-        const player = {
-            // Base
-            ...character,
-            // Property Defaults
-            x: 512,
-            y: 512,
-            tile: TILES.player,
-            // Methods
-            processFrame,
-            checkForMovement,
-            // Overrides
-            ...options,
-        }
+    const PLAYER_DEFAULTS = {
+        x: 512,
+        y: 512,
+        width: 20,
+        tileSet: [
+            {
+                tile: TILES.playerTop,
+                y: -32,
+            },
+            {
+                tile: TILES.playerBottom,
+            },
+        ],
+        processFrame,
+        checkForMovement,
+    };
 
-        return player;
+    function playerFactory(options) {
+        const playerProps = {
+            ...PLAYER_DEFAULTS,
+            ...options,
+        };
+
+        return characterFactory(playerProps);
     }
 
     function processFrame() {

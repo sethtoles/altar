@@ -7,7 +7,11 @@ function mapFactory(tileMap) {
             const { width, height } = tile;
 
             const tileObject = gameObjectFactory({
-                tile,
+                tileSet: [
+                    {
+                        tile,
+                    },
+                ],
                 x: columnIndex * width,
                 y: rowIndex * height,
             });

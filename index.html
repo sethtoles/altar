@@ -10,6 +10,7 @@
     <script type="text/javascript" src="./tiles.js"></script>
     <script type="text/javascript" src="./spacialHash.js"></script>
     <script type="text/javascript" src="./eventHandlers.js"></script>
+    <script type="text/javascript" src="./renderable.js"></script>
     <script type="text/javascript" src="./gameObject.js"></script>
     <script type="text/javascript" src="./targeting.js"></script>
     <script type="text/javascript" src="./map.js"></script>
@@ -65,7 +66,11 @@
                 x: 300,
                 y: 275,
                 // height: 2,
-                tile: TILES.character,
+                tileSet: [
+                    {
+                        tile: TILES.character,
+                    },
+                ],
                 canCollide: true,
             });
             colliders.addChild(testingObj);
@@ -105,7 +110,9 @@
                         object.processFrame();
                     }
 
-                    object.render(scene.camera);
+                    if (object.render) {
+                        object.render(scene.camera);
+                    }
                 });
             });
 

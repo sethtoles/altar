@@ -2,11 +2,19 @@ const TILES = {
     0: {
         src: './tiles/tile_0.png',
     },
-    character: {
+    target: {
         src: './tiles/tile_1.png',
     },
-    player: {
+    character: {
         src: './tiles/tile_2.png',
+    },
+    playerTop: {
+        src: './tiles/tile_3.png',
+        width: 20,
+    },
+    playerBottom: {
+        src: './tiles/tile_4.png',
+        width: 20,
     },
 };
 
