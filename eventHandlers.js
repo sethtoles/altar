@@ -1,4 +1,6 @@
 const KEY = {
+    CLICK: 1,
+    RIGHT_CLICK: 3,
     SHIFT: 16,
     ESC: 27,
     LEFT: 37,
@@ -10,9 +12,9 @@ const KEY = {
     D: 68,
     S: 83,
     W: 87,
-    CMD: 91,
-    EQUALS: 187,
-    MINUS: 189,
+    CMD: 224,
+    EQUALS: 61,
+    MINUS: 173,
 };
 
 function addListeners() {
@@ -21,10 +23,13 @@ function addListeners() {
     window.addEventListener('resize', handleResize);
     window.addEventListener('focus', handleFocus);
     window.addEventListener('blur', handleBlur);
-    window.addEventListener('mouseup', handleClick);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('contextmenu', event => event.preventDefault());
 
     function handleKeyDown(event) {
         held[event.which] = true;
+        console.log('key', event.which);
 
         switch (event.which) {
             case KEY.ESC:
@@ -39,8 +44,6 @@ function addListeners() {
             case KEY.ZERO:
                 scene.camera.resetZoom();
                 break;
-            default:
-                console.log(event.which);
         }
     }
 
@@ -48,8 +51,15 @@ function addListeners() {
         held[event.which] = false;
     }
 
-    function handleClick(event) {
-        if (!scene.paused) {
+    function handleMouseDown(event) {
+        // Prevent default click handling on canvas
+        if (event.target === elements.canvas) {
+            event.preventDefault();
+        }
+    }
+
+    function handleMouseUp(event) {
+        if (event.target === elements.canvas && !scene.paused) {
             getWorldCoordinates(event);
         }
     }
@@ -76,9 +86,10 @@ function addListeners() {
     }
 }
 
-function handleResize(event) {
+function handleResize() {
     elements.canvas.width = window.innerWidth;
     elements.canvas.height = window.innerHeight;
+    scene.camera.zoomChanged();
 }
 
 function handleFocus() {
