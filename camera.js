@@ -1,3 +1,7 @@
+// The percentage of the distance to the followed object that the camera will move each tick.
+// Lower number means a smoother, longer movement
+const SMOOTH_AMOUNT = 0.95;
+
 function cameraFactory(options) {
     const gameObject = gameObjectFactory();
     const camera = {
@@ -5,9 +9,12 @@ function cameraFactory(options) {
         ...gameObject,
         // Property Defaults
         zoom: DEFAULT_PROP.ZOOM,
-        maxZoom: 5,
-        minZoom: 0.8,
-        zoomRate: 0.2,
+        zoomLevels: [0.7, DEFAULT_PROP.ZOOM, 2, 4],
+        smooth: true,
+        following: null,
+        // State
+        centerX: 0,
+        centerY: 0, 
         // Methods
         zoomIn,
         zoomOut,
@@ -21,16 +28,18 @@ function cameraFactory(options) {
     return camera;
 
     function zoomIn() {
-        if (this.zoom < this.maxZoom) {
-            this.zoom += this.zoomRate;
+        const zoomLevelIndex = this.zoomLevels.indexOf(this.zoom);
+        if (zoomLevelIndex < this.zoomLevels.length - 1) {
+            this.zoom = this.zoomLevels[zoomLevelIndex + 1];
 
             this.zoomChanged()
         }
     }
 
     function zoomOut() {
-        if (this.zoom > this.minZoom) {
-            this.zoom -= this.zoomRate;
+        const zoomLevelIndex = this.zoomLevels.indexOf(this.zoom);
+        if (zoomLevelIndex > 0) {
+            this.zoom = this.zoomLevels[zoomLevelIndex - 1];
 
             this.zoomChanged()
         }
@@ -45,24 +54,45 @@ function cameraFactory(options) {
     function zoomChanged() {
         ctx.imageSmoothingEnabled = this.zoom <= 1;
 
-        this.width = elements.canvas.width / this.zoom;
-        this.height = elements.canvas.height / this.zoom;
+        const { width: canvasWidth, height: canvasHeight } = elements.canvas;
+        this.width = canvasWidth / this.zoom;
+        this.height = canvasHeight / this.zoom;
+        this.centerX = canvasWidth / (this.zoom * 2);
+        this.centerY = canvasHeight / (this.zoom * 2);
 
-        this.follow(scene.player);
+        if (this.following) {
+            const wasSmooth = this.smooth;
+            this.smooth = false;
+            this.follow();
+            this.smooth = wasSmooth;
+        }
     }
 
-    function follow(gameObject, smooth) {
-        const scale = 2 * this.zoom;
-        const newX = gameObject.x + (gameObject.width / 2) - (elements.canvas.width / scale);
-        const newY = gameObject.y + (gameObject.height / 2) - (elements.canvas.height / scale);
+    function follow() {
+        const { x, y, width, height } = this.following;
+        // Align canvas center point to following center point
+        const newX = Math.round(x + (width / 2) - this.centerX);
+        const newY = Math.round(y + (height / 2) - this.centerY);
 
-        if (smooth) {
-            this.x = newX + ((this.x - newX) * 0.95);
-            this.y = newY + ((this.y - newY) * 0.95);
+        if (this.x !== newX) {
+            if (this.smooth) {
+                const adjustedX = (this.x - newX) * SMOOTH_AMOUNT;
+                this.x = Math.abs(adjustedX) < 1 ? newX : Math.round(newX + adjustedX);
+            }
+            else {
+                this.x = newX;
+            }
         }
-        else {
-            this.x = newX;
-            this.y = newY;
+        
+        if (this.y !== newY) {
+            if (this.smooth) {
+                const adjustedY = (this.y - newY) * SMOOTH_AMOUNT;
+                this.y = Math.abs(adjustedY) < 1 ? newY : Math.round(newY + adjustedY);
+            }
+            else {
+                this.y = newY;
+            }
+
         }
     }
 }

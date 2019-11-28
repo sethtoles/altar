@@ -89,7 +89,7 @@
                 characters,
                 player,
                 colliders,
-                camera: cameraFactory(),
+                camera: cameraFactory({ following: player }),
                 paused: false,
             };
         }
@@ -99,12 +99,17 @@
                 return;
             }
 
+            const frameTime = timer - elapsed;
+            const extraTime = Math.min(0, 25 - frameTime); // Limit to 40fps
+            elapsed = timer;
+
             clearScreen();
 
-            scene.camera.follow(scene.player, true);
+            scene.camera.follow();
 
             scene.layers.forEach((layer) => {
                 layer.forEach((object) => {
+                    // TODO: Move to worker
                     if (object.processFrame) {
                         object.processFrame();
                     }
@@ -115,7 +120,9 @@
                 });
             });
 
+            setTimeout(() => {
                 window.requestAnimationFrame(gameLoop);
+            }, extraTime);
         }
 
         function togglePause() {
@@ -123,9 +130,8 @@
             utils.clearHeld();
 
             if (scene.paused) {
-                clearScreen(COLOR.BLACK);
-
-                ctx.fillStyle = COLOR.WHITE;
+                clearScreen();
+                ctx.fillStyle = COLOR.BLACK;
                 ctx.font = FONT.PRIMARY;
                 ctx.textAlign = 'center';
                 ctx.fillText(
@@ -139,18 +145,8 @@
             }
         }
 
-        function clearScreen(color = COLOR.WHITE) {
-            const { fillStyle } = ctx;
-
-            ctx.fillStyle = color;
-            ctx.fillRect(
-                0,
-                0,
-                elements.canvas.width,
-                elements.canvas.height
-            );
-
-            ctx.fillStyle = fillStyle;
+        function clearScreen() {
+            ctx.clearRect(0, 0, elements.canvas.width, elements.canvas.height);
         }
     </script>
 </html>
