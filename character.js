@@ -2,9 +2,6 @@
     global.characterFactory = characterFactory;
 
     const CHARACTER_DEFAULTS = {
-        canMove: true,
-        canTarget: true,
-        canCollide: true,
         baseSpeed: 1,
         sprintSpeed: 3,
         isSprinting: false,
@@ -14,6 +11,7 @@
             },
         ],
         getSpeed,
+        moveToward,
     };
 
     function characterFactory(options) {
@@ -24,13 +22,7 @@
 
         const character = gameObjectFactory(characterProps);
 
-        if (character.canMove) {
-            character.moveToward = moveToward;
-        }
-
-        if (character.canTarget) {
-            global.makeTargeting(character);
-        }
+        global.makeTargeting(character);
 
         return character;
     }

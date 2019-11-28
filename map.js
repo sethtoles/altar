@@ -14,6 +14,8 @@ function mapFactory(tileMap) {
                 ],
                 x: columnIndex * width,
                 y: rowIndex * height,
+                width: 0,
+                height: 0,
             });
 
             map.push(tileObject);

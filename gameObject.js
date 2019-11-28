@@ -7,13 +7,12 @@
             y: 0,
             width: DEFAULT_PROP.WIDTH,
             height: DEFAULT_PROP.HEIGHT,
-            canCollide: false,
             move,
             intersects,
             ...options,
         };
 
-        if (gameObject.canCollide) {
+        if (gameObject.width && gameObject.height) {
             gameObject.containers = [];
         }
 
@@ -28,7 +27,7 @@
         this.x += x;
         this.y += y;
 
-        if (this.canCollide) {
+        if (this.width && this.height) {
             this.containers.forEach(({ children }) => {
                 children.forEach((child) => {
                     if (this !== child && this.intersects(child)) {

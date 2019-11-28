@@ -39,8 +39,6 @@
 
         this.isSprinting = !!held[KEY.SHIFT];
 
-        const hasTarget = this.canTarget && this.hasTarget();
-
         if (right || left || up || down) {
             this.clearTargets();
 
@@ -49,7 +47,7 @@
                 up - down
             );
         }
-        else if (hasTarget) {
+        else if (this.hasTarget()) {
             this.approachTarget();
         }
     }

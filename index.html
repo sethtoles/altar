@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta charset="utf-8"></meta>
         <title>Altar</title>
     </head>
     <body style="margin: 0; padding: 0;">
@@ -28,6 +29,7 @@
         const scene = sceneFactory();
         this.scene = scene;
         const held = {};
+        let elapsed = 0;
 
         // Environment Setup
         addListeners();
@@ -42,7 +44,7 @@
         // -- FUNCTION DEFINITIONS -- //
 
         function getElements() {
-            return{
+            return {
                 canvas: document.getElementById('gameLayer'),
             };
         }
@@ -54,7 +56,6 @@
         function sceneFactory() {
             const background = mapFactory(WORLD_MAP);
             const player = playerFactory({
-                // height: 2,
                 sprintSpeed: 5,
             });
             const targets = [];
@@ -65,13 +66,11 @@
             const testingObj = gameObjectFactory({
                 x: 300,
                 y: 275,
-                // height: 2,
                 tileSet: [
                     {
                         tile: TILES.character,
                     },
                 ],
-                canCollide: true,
             });
             colliders.addChild(testingObj);
             characters.push(testingObj);
@@ -116,7 +115,7 @@
                 });
             });
 
-            window.requestAnimationFrame(gameLoop);
+                window.requestAnimationFrame(gameLoop);
         }
 
         function togglePause() {
