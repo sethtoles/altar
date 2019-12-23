@@ -1,8 +1,12 @@
+import { DEFAULT_PROP } from './constants';
+import { gameObjectFactory} from './gameObject';
+import { ctx, elements } from './index';
+
 // The percentage of the distance to the followed object that the camera will move each tick.
 // Lower number means a smoother, longer movement
 const SMOOTH_AMOUNT = 0.95;
 
-function cameraFactory(options) {
+export function cameraFactory(options) {
     const gameObject = gameObjectFactory();
     const camera = {
         // Base

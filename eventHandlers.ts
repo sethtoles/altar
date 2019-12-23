@@ -1,4 +1,8 @@
-const KEY = {
+import { elements, held, scene, togglePause } from './index';
+import { TILES } from './tiles';
+import { utils } from './utils';
+
+export const KEY = {
     CLICK: 1,
     RIGHT_CLICK: 3,
     SHIFT: 16,
@@ -17,7 +21,7 @@ const KEY = {
     MINUS: 173,
 };
 
-function addListeners() {
+export function addListeners() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     window.addEventListener('resize', handleResize);
@@ -86,7 +90,7 @@ function addListeners() {
     }
 }
 
-function handleResize() {
+export function handleResize() {
     elements.canvas.width = window.innerWidth;
     elements.canvas.height = window.innerHeight;
     scene.camera.zoomChanged();

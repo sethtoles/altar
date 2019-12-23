@@ -1,4 +1,7 @@
-function mapFactory(tileMap) {
+import { gameObjectFactory } from './gameObject';
+import { TILES } from './tiles';
+
+export function mapFactory(tileMap) {
     const map = [];
 
     tileMap.forEach((row, rowIndex) => {

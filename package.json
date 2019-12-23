@@ -1,0 +1,24 @@
+{
+  "name": "altar",
+  "version": "1.0.0",
+  "description": "An Experiment In JavaScript Game Dev",
+  "main": "camera.js",
+  "scripts": {
+    "start": "./node_modules/parcel-bundler/bin/cli.js index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sethtoles/altar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sethtoles/altar/issues"
+  },
+  "homepage": "https://github.com/sethtoles/altar#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.7.4"
+  }
+}
