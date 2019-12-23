@@ -19,18 +19,11 @@ function hasTarget() {
 function addTarget(targetOptions) {
     const target = gameObjectFactory(targetOptions);
 
-    scene.targets.push(target);
-
     this.targets.push(target);
 }
 
 function removeTarget(target) {
     const index = this.targets.indexOf(target);
-    const sceneIndex = scene.targets.indexOf(target);
-
-    if (sceneIndex >= 0) {
-        scene.targets.splice(sceneIndex, 1);
-    }
 
     if (index >= 0) {
         return this.targets.splice(index, 1);

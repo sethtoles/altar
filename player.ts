@@ -1,7 +1,6 @@
-import { TILES } from './tiles';
 import { characterFactory } from './character';
-import { held } from './index';
-import { KEY } from './eventHandlers';
+import { held, KEY } from './eventHandlers';
+import { TILES } from './tiles';
 
 const PLAYER_DEFAULTS = {
     x: 512,

@@ -1,6 +1,13 @@
-import { elements, held, scene, togglePause } from './index';
+import { elements, scene, togglePause } from './index';
 import { TILES } from './tiles';
-import { utils } from './utils';
+
+export const held: { [key: number]: true } = {};
+
+export function clearHeld() {
+    for (const key in held) {
+        delete held[key];
+    }
+}
 
 export const KEY = {
     CLICK: 1,
@@ -25,13 +32,13 @@ export function addListeners() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     window.addEventListener('resize', handleResize);
-    window.addEventListener('focus', handleFocus);
-    window.addEventListener('blur', handleBlur);
+    window.addEventListener('focus', clearHeld);
+    window.addEventListener('blur', clearHeld);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
     window.addEventListener('contextmenu', event => event.preventDefault());
 
-    function handleKeyDown(event) {
+    function handleKeyDown(event: KeyboardEvent) {
         held[event.which] = true;
         console.log('key', event.which);
 
@@ -51,24 +58,24 @@ export function addListeners() {
         }
     }
 
-    function handleKeyUp(event) {
-        held[event.which] = false;
+    function handleKeyUp(event: KeyboardEvent) {
+        delete held[event.which];
     }
 
-    function handleMouseDown(event) {
+    function handleMouseDown(event: MouseEvent) {
         // Prevent default click handling on canvas
         if (event.target === elements.canvas) {
             event.preventDefault();
         }
     }
 
-    function handleMouseUp(event) {
+    function handleMouseUp(event: MouseEvent) {
         if (event.target === elements.canvas && !scene.paused) {
             getWorldCoordinates(event);
         }
     }
 
-    function getWorldCoordinates(event) {
+    function getWorldCoordinates(event: MouseEvent) {
         const { clientX, clientY } = event;
         const { camera, player } = scene;
         const x = camera.x + (clientX / camera.zoom);
@@ -94,12 +101,4 @@ export function handleResize() {
     elements.canvas.width = window.innerWidth;
     elements.canvas.height = window.innerHeight;
     scene.camera.zoomChanged();
-}
-
-function handleFocus() {
-    utils.clearHeld();
-}
-
-function handleBlur() {
-    utils.clearHeld();
 }

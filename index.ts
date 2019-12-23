@@ -1,12 +1,11 @@
 import { cameraFactory } from './camera';
 import { COLOR, FONT, WORLD_MAP } from './constants';
-import { addListeners, handleResize } from './eventHandlers';
+import { addListeners, clearHeld, handleResize } from './eventHandlers';
 import { gameObjectFactory } from './gameObject';
 import { mapFactory } from './map';
 import { playerFactory } from './player';
 import { spacialHashFactory } from './spacialHash';
 import { TILES } from './tiles';
-import { utils } from './utils';
 
 // Stored Elements
 export const elements = {
@@ -18,7 +17,6 @@ export const ctx = elements.canvas.getContext('2d');
 
 // Game State
 export const scene = sceneFactory();
-export const held = {};
 let elapsed = 0;
 
 // Environment Setup
@@ -35,7 +33,6 @@ function sceneFactory() {
     const player = playerFactory({
         sprintSpeed: 5,
     });
-    const targets = [];
     const characters = [];
     const colliders = spacialHashFactory();
 
@@ -59,10 +56,9 @@ function sceneFactory() {
     return {
         layers: [
             background,
-            targets,
+            player.targets,
             characters,
         ],
-        targets,
         characters,
         player,
         colliders,
@@ -104,7 +100,7 @@ function gameLoop(timer?: number) {
 
 export function togglePause() {
     scene.paused = !scene.paused;
-    utils.clearHeld();
+    clearHeld();
 
     if (scene.paused) {
         clearScreen();
