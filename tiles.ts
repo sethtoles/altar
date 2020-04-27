@@ -1,9 +1,9 @@
 import { DEFAULT_PROP } from './constants';
-import tile_0 from './tiles/tile_0.png';
-import tile_1 from './tiles/tile_1.png';
-import tile_2 from './tiles/tile_2.png';
-import tile_3 from './tiles/tile_3.png';
-import tile_4 from './tiles/tile_4.png';
+import tile_0 from 'url:./tiles/tile_0.png';
+import tile_1 from 'url:./tiles/tile_1.png';
+import tile_2 from 'url:./tiles/tile_2.png';
+import tile_3 from 'url:./tiles/tile_3.png';
+import tile_4 from 'url:./tiles/tile_4.png';
 
 export const TILES = {
     0: {
