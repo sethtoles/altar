@@ -7,20 +7,23 @@ export function makeRenderable(gameObject) {
 }
 
 function render(camera) {
-    if (
-        this.x > camera.x + camera.width ||
-        this.y > camera.y + camera.height ||
-        this.x + this.width < camera.x ||
-        this.y + this.height < camera.y
-    ) {
-        return;
-    }
-
-    this.tileSet.forEach(({ tile, x, y }) => {
+    this.tileSet.forEach(({ tile, x = 0, y = 0 }) => {
+        const tileX = this.x + x;
+        const tileY = this.y + y;
+        
+        if (
+            tileX > camera.x + camera.width ||
+            tileY > camera.y + camera.height ||
+            tileX + tile.width < camera.x ||
+            tileY + tile.height < camera.y
+        ) {
+            return;
+        }
+        
         ctx.drawImage(
             tile.image,
-            (Math.round(this.x + (x || 0)) - camera.x) * camera.zoom,
-            (Math.round(this.y + (y || 0)) - camera.y) * camera.zoom,
+            Math.round(tileX - camera.x) * camera.zoom,
+            Math.round(tileY - camera.y) * camera.zoom,
             tile.width * camera.zoom,
             tile.height * camera.zoom
         );
