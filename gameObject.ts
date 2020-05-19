@@ -11,9 +11,9 @@ const baseObject = {
     intersects,
 };
 
-type GameObject = typeof baseObject & {
-    containers?: [];
-    tileSet?: [];
+export type GameObject = typeof baseObject & {
+    containers?: object[];
+    tileSet?: object[];
 };
 
 export function gameObjectFactory(options?: Partial<GameObject>) {
@@ -33,7 +33,7 @@ export function gameObjectFactory(options?: Partial<GameObject>) {
     return gameObject;
 }
 
-function move(x: number, y: number) {
+function move(this: GameObject, x: number, y: number) {
     this.x += x;
     this.y += y;
 
@@ -84,7 +84,7 @@ function move(x: number, y: number) {
     }
 }
 
-function intersects(target: GameObject) {
+function intersects(this: GameObject, target: GameObject) {
     const top = this.y;
     const bottom = top + this.height;
 
