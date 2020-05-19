@@ -2,14 +2,23 @@ import { DEFAULT_PROP, NUDGE } from './constants';
 import { scene } from './index';
 import { makeRenderable } from './renderable';
 
-export function gameObjectFactory(options) {
+const baseObject = {
+    x: 0,
+    y: 0,
+    width: DEFAULT_PROP.WIDTH,
+    height: DEFAULT_PROP.HEIGHT,
+    move,
+    intersects,
+};
+
+type GameObject = typeof baseObject & {
+    containers?: [];
+    tileSet?: [];
+};
+
+export function gameObjectFactory(options: Partial<GameObject>) {
     const gameObject = {
-        x: 0,
-        y: 0,
-        width: DEFAULT_PROP.WIDTH,
-        height: DEFAULT_PROP.HEIGHT,
-        move,
-        intersects,
+        ...baseObject,
         ...options,
     };
 
@@ -24,7 +33,7 @@ export function gameObjectFactory(options) {
     return gameObject;
 }
 
-function move(x, y) {
+function move(x: number, y: number) {
     this.x += x;
     this.y += y;
 
@@ -61,19 +70,20 @@ function move(x, y) {
     }
 }
 
-function intersects(target) {
+function intersects(target: GameObject) {
     const top = this.y;
     const bottom = top + this.height;
-    const left = this.x;
-    const right = left + this.width;
-
     const targetTop = target.y;
     const targetBottom = targetTop + target.height;
+    const verticalOverlap = (top <= targetBottom) && (bottom >= targetTop);
+
+    if (!verticalOverlap) return false;
+
+    const left = this.x;
+    const right = left + this.width;
     const targetLeft = target.x;
     const targetRight = targetLeft + target.width;
-
-    const verticalOverlap = (top <= targetBottom) && (bottom >= targetTop);
     const horizontalOverlap = (right >= targetLeft) && (left <= targetRight);
 
-    return (verticalOverlap && horizontalOverlap);
+    return !!horizontalOverlap;
 }
