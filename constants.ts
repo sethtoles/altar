@@ -10,10 +10,7 @@ export const FONT = {
 export const DEFAULT_PROP = {
     WIDTH: 32,
     HEIGHT: 32,
-    ZOOM: 1,
 };
-
-export const NUDGE = 0.00001;
 
 export const WORLD_MAP = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],

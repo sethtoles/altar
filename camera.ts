@@ -1,10 +1,11 @@
-import { DEFAULT_PROP } from './constants';
 import { gameObjectFactory} from './gameObject';
 import { ctx, elements } from './index';
 
 // The percentage of the distance to the followed object that the camera will move each tick.
-// Lower number means a smoother, longer movement
+// Lower number means a smoother, longer movement.
 const SMOOTH_AMOUNT = 0.95;
+// Scale factor of sprite pixel to screen pixel.
+const DEFAULT_ZOOM = 1;
 
 export function cameraFactory(options) {
     const gameObject = gameObjectFactory();
@@ -12,8 +13,8 @@ export function cameraFactory(options) {
         // Base
         ...gameObject,
         // Property Defaults
-        zoom: DEFAULT_PROP.ZOOM,
-        zoomLevels: [0.7, DEFAULT_PROP.ZOOM, 2, 4],
+        zoom: DEFAULT_ZOOM,
+        zoomLevels: [0.7, DEFAULT_ZOOM, 2, 4],
         smooth: true,
         following: null,
         // State
@@ -50,7 +51,7 @@ export function cameraFactory(options) {
     }
 
     function resetZoom() {
-        this.zoom = DEFAULT_PROP.ZOOM;
+        this.zoom = DEFAULT_ZOOM;
 
         this.zoomChanged()
     }
