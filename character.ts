@@ -1,5 +1,5 @@
 import { gameObjectFactory, GameObject } from './gameObject';
-import { makeTargeting } from './targeting';
+import { targetingProps } from './targeting';
 import { TILES } from './tiles';
 
 const baseCharacter = {
@@ -13,19 +13,19 @@ const baseCharacter = {
     ],
     getSpeed,
     moveToward,
+    approachTarget,
 };
 
-type Character = GameObject & typeof baseCharacter;
+type Character = GameObject & typeof baseCharacter & typeof targetingProps;
 
 export function characterFactory(options?: Partial<Character>) {
-    const characterProps = {
+    const gameObject = gameObjectFactory();
+    const character = {
+        ...gameObject,
         ...baseCharacter,
+        ...targetingProps,
         ...options,
     };
-
-    const character = gameObjectFactory(characterProps);
-
-    makeTargeting(character);
 
     return character;
 }
@@ -45,4 +45,24 @@ function moveToward(this: Character, directionX: number, directionY: number) {
     }
 
     this.move(directionX * speed, -directionY * speed);
+}
+
+function approachTarget(this: Character) {
+    const target = this.targets[0];
+    const speed = this.getSpeed();
+
+    const directionX = target.x - this.x;
+    const directionY = this.y - target.y;
+
+    if (
+        Math.abs(directionX) < speed
+        && Math.abs(directionY) < speed
+    ) {
+        this.x = target.x;
+        this.y = target.y;
+        this.removeTarget(target);
+    }
+    else {
+        this.moveToward(directionX, directionY);
+    }
 }

@@ -29,10 +29,8 @@ type Camera = GameObject & typeof baseCamera;
 export function cameraFactory(options?: Partial<Camera>) {
     const gameObject = gameObjectFactory();
     const camera = {
-        // Base
         ...gameObject,
         ...baseCamera,
-        // Overrides
         ...options,
     }
 

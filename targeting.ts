@@ -1,28 +1,26 @@
-import { gameObjectFactory } from './gameObject';
-import { scene } from './index';
+import { gameObjectFactory, GameObject } from './gameObject';
 
-export function makeTargeting(gameObject) {
-    Object.assign(gameObject, {
-        targets: [],
-        hasTarget,
-        addTarget,
-        removeTarget,
-        clearTargets,
-        approachTarget,
-    });
-}
+export const targetingProps = {
+    targets: [] as GameObject[],
+    hasTarget,
+    addTarget,
+    removeTarget,
+    clearTargets,
+};
 
-function hasTarget() {
+type Targeting = GameObject & typeof targetingProps;
+
+function hasTarget(this: Targeting) {
     return this.targets.length;
 }
 
-function addTarget(targetOptions) {
+function addTarget(this: Targeting, targetOptions?: Partial<GameObject>) {
     const target = gameObjectFactory(targetOptions);
 
     this.targets.push(target);
 }
 
-function removeTarget(target) {
+function removeTarget(this: Targeting, target: GameObject) {
     const index = this.targets.indexOf(target);
 
     if (index >= 0) {
@@ -30,30 +28,10 @@ function removeTarget(target) {
     }
 }
 
-function clearTargets() {
+function clearTargets(this: Targeting) {
     const { length } = this.targets;
 
     for (let i = length - 1; i >= 0; i--) {
         this.removeTarget(this.targets[i]);
-    }
-}
-
-function approachTarget() {
-    if (this.moveToward) {
-        const target = this.targets[0];
-        const speed = this.getSpeed();
-
-        const directionX = target.x - this.x;
-        const directionY = this.y - target.y;
-
-        if (
-            Math.abs(directionX) < speed
-            && Math.abs(directionY) < speed
-        ) {
-            this.removeTarget(target);
-        }
-        else {
-            this.moveToward(directionX, directionY);
-        }
     }
 }
