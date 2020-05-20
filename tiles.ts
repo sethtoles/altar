@@ -5,7 +5,17 @@ import tile_2 from 'url:./tiles/tile_2.png';
 import tile_3 from 'url:./tiles/tile_3.png';
 import tile_4 from 'url:./tiles/tile_4.png';
 
-export const TILES = {
+export type Tile = {
+    src: string;
+    width?: number;
+    height?: number;
+    image?: HTMLImageElement;
+}
+
+// TODO: Make stricter index with only specified keys.
+type TileMap = { [key: string]: Tile;}
+
+export const TILES: TileMap = {
     0: {
         src: tile_0,
     },
@@ -33,4 +43,4 @@ for (const key in TILES) {
 
     tile.width = tile.width || DEFAULT_PROP.WIDTH;
     tile.height = tile.height || DEFAULT_PROP.HEIGHT;
-};
+}

@@ -1,8 +1,10 @@
-import { gameObjectFactory } from './gameObject';
+import { gameObjectFactory, GameObject } from './gameObject';
 import { TILES } from './tiles';
 
-export function mapFactory(tileMap) {
-    const map = [];
+type TileName = keyof typeof TILES;
+
+export function mapFactory(tileMap: TileName[][]) {
+    const map: GameObject[] = [];
 
     tileMap.forEach((row, rowIndex) => {
         row.forEach((tileId, columnIndex) => {

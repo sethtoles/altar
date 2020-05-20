@@ -1,7 +1,8 @@
 import { cameraFactory } from './camera';
+import { Character } from './character';
 import { COLOR, FONT, WORLD_MAP } from './constants';
 import { addListeners, clearHeld, handleResize } from './eventHandlers';
-import { gameObjectFactory } from './gameObject';
+import { gameObjectFactory, GameObject } from './gameObject';
 import { mapFactory } from './map';
 import { playerFactory } from './player';
 import { spacialHashFactory } from './spacialHash';
@@ -33,7 +34,8 @@ function sceneFactory() {
     const player = playerFactory({
         sprintSpeed: 5,
     });
-    const characters = [];
+    const characters: Character[] = [];
+    const props: GameObject[] = [];
     const colliders = spacialHashFactory();
 
 
@@ -47,15 +49,16 @@ function sceneFactory() {
         ],
     });
     colliders.addChild(testingObj);
-    characters.push(testingObj);
+    props.push(testingObj);
 
 
-    characters.push(player);
     colliders.addChild(player);
+    characters.push(player);
 
     return {
         layers: [
             background,
+            props,
             player.targets,
             characters,
         ],

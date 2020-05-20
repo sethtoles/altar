@@ -16,7 +16,7 @@ const baseCharacter = {
     approachTarget,
 };
 
-type Character = GameObject & typeof baseCharacter & typeof targetingProps;
+export type Character = GameObject & typeof baseCharacter & typeof targetingProps;
 
 export function characterFactory(options?: Partial<Character>) {
     const gameObject = gameObjectFactory();
