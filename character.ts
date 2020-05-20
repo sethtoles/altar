@@ -1,8 +1,8 @@
-import { gameObjectFactory } from './gameObject';
+import { gameObjectFactory, GameObject } from './gameObject';
 import { makeTargeting } from './targeting';
 import { TILES } from './tiles';
 
-const CHARACTER_DEFAULTS = {
+const baseCharacter = {
     baseSpeed: 1,
     sprintSpeed: 3,
     isSprinting: false,
@@ -15,9 +15,11 @@ const CHARACTER_DEFAULTS = {
     moveToward,
 };
 
-export function characterFactory(options) {
+type Character = GameObject & typeof baseCharacter;
+
+export function characterFactory(options?: Partial<Character>) {
     const characterProps = {
-        ...CHARACTER_DEFAULTS,
+        ...baseCharacter,
         ...options,
     };
 
@@ -28,11 +30,11 @@ export function characterFactory(options) {
     return character;
 }
 
-function getSpeed() {
+function getSpeed(this: Character) {
     return (this.isSprinting) ? this.sprintSpeed : this.baseSpeed;
 }
 
-function moveToward(directionX, directionY) {
+function moveToward(this: Character, directionX: number, directionY: number) {
     const speed = this.getSpeed();
 
     if (directionX && directionY) {
