@@ -3,21 +3,21 @@ import { held, KEY } from './eventHandlers';
 import { TILES } from './tiles';
 
 export class Player extends Character {
+    x = 512;
+    y = 512;
+    width = 20;
+    tileSet = [
+        {
+            tile: TILES.playerTop,
+            y: -32,
+        },
+        {
+            tile: TILES.playerBottom,
+        },
+    ];
+    
     constructor(options?: Partial<Player>) {
         super(options);
-
-        this.x = 512;
-        this.y = 512;
-        this.width = 20;
-        this.tileSet = [
-            {
-                tile: TILES.playerTop,
-                y: -32,
-            },
-            {
-                tile: TILES.playerBottom,
-            },
-        ];
 
         Object.assign(this, options);
     }

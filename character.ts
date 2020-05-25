@@ -1,31 +1,41 @@
 import { GameObject } from './gameObject';
 import { TILES } from './tiles';
 
-export interface Character {
-    baseSpeed: number,
-    isSprinting: boolean,
-    sprintSpeed: number,
-    targets: GameObject[],
-}
+const SPRINT_MODIFIER = 1.03;
 
 export class Character extends GameObject {
+    baseSpeed = 1;
+    speed: number;
+    sprintSpeed = 3;
+    isSprinting = false;
+    maxStamina = 5;
+    stamina: number;
+    targets: GameObject[] = [];
+    tileSet: GameObject['tileSet'] = [
+        {
+            tile: TILES.character,
+        },
+    ];
+
     constructor(options?: Partial<Character>) {
         super(options);
 
-        this.baseSpeed = 1;
-        this.sprintSpeed = 3;
-        this.isSprinting = false;
-        this.tileSet = [
-            {
-                tile: TILES.character,
-            },
-        ];
+        this.speed = this.baseSpeed;
+        this.stamina = this.maxStamina;
 
         Object.assign(this, options);
     }
 
     getSpeed() {
-        return (this.isSprinting) ? this.sprintSpeed : this.baseSpeed;
+        if (this.isSprinting) {
+            const newSpeed = this.speed * SPRINT_MODIFIER;
+            this.speed = Math.min(this.sprintSpeed, newSpeed);
+        }
+        else {
+            this.speed = (this.speed + this.baseSpeed) / 2;
+        }
+
+        return this.speed;
     }
 
     moveToward(directionX: number, directionY: number) {

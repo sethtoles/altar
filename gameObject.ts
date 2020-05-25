@@ -10,22 +10,15 @@ type TileConfig = {
     tile: Tile;
 }
 
-export interface GameObject {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+export class GameObject {
+    x = 0;
+    y = 0;
+    width = DEFAULT_PROP.WIDTH;
+    height = DEFAULT_PROP.HEIGHT;
     containers?: Cell[];
     tileSet?: TileConfig[];
-}
 
-export class GameObject {
     constructor(options?: Partial<GameObject>) {
-        this.x = 0;
-        this.y = 0;
-        this.width = DEFAULT_PROP.WIDTH;
-        this.height = DEFAULT_PROP.HEIGHT;
-
         Object.assign(this, options);
 
         if (this.width && this.height) {
@@ -115,14 +108,7 @@ export class GameObject {
             const tileX = this.x + x;
             const tileY = this.y + y;
 
-            if (
-                tileX > camera.x + camera.width ||
-                tileY > camera.y + camera.height ||
-                tileX + tile.width < camera.x ||
-                tileY + tile.height < camera.y
-            ) {
-                return;
-            }
+            if (!this.intersects(camera)) return;
 
             ctx.drawImage(
                 tile.image,
