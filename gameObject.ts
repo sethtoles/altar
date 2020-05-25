@@ -1,6 +1,7 @@
 import { Camera } from './camera';
 import { DEFAULT_PROP } from './constants';
 import { ctx, scene } from './index';
+import { Cell } from './spacialHash';
 import { Tile } from './tiles';
 
 type TileConfig = {
@@ -14,7 +15,7 @@ export interface GameObject {
     y: number;
     width: number;
     height: number;
-    containers?: object[];
+    containers?: Cell[];
     tileSet?: TileConfig[];
 }
 

@@ -1,19 +1,34 @@
 import { DEFAULT_PROP } from './constants';
+import { GameObject } from './gameObject';
 
-export function spacialHashFactory(options?) {
+const baseHash = {
+    cellSize: DEFAULT_PROP.WIDTH,
+    addChild,
+    removeChild,
+    refreshChild,
+    getIntersectedCellKeys,
+};
+
+export type Cell = {
+    children: GameObject[];
+};
+
+type SpacialHash = typeof baseHash & {
+    [key: string]: Cell;
+};
+
+export function spacialHashFactory(options?: Partial<SpacialHash>) {
     const hash = {
-        cellSize: DEFAULT_PROP.WIDTH,
-        addChild,
-        removeChild,
-        refreshChild,
-        getIntersectedCellKeys,
+        ...baseHash,
         ...options,
-    };
+    } as SpacialHash;
 
     return hash;
 }
 
-function cellFactory(options?) {
+
+
+function cellFactory(options?: Partial<Cell>) {
     const cell = {
         children: [],
         ...options,
@@ -22,7 +37,7 @@ function cellFactory(options?) {
     return cell;
 }
 
-function addChild(child) {
+function addChild(this: SpacialHash, child: GameObject) {
     const cellKeys = this.getIntersectedCellKeys(child);
 
     cellKeys.forEach((key) => {
@@ -37,7 +52,7 @@ function addChild(child) {
     });
 }
 
-function removeChild(child) {
+function removeChild(this: SpacialHash, child: GameObject) {
     child.containers.forEach(({ children }) => {
         const index = children.indexOf(child);
 
@@ -49,7 +64,7 @@ function removeChild(child) {
     child.containers = [];
 }
 
-function refreshChild(child) {
+function refreshChild(this: SpacialHash, child: GameObject) {
     const newKeys = this.getIntersectedCellKeys(child);
     const minKey = newKeys[0];
     const maxKey = newKeys[newKeys.length - 1];
@@ -63,7 +78,7 @@ function refreshChild(child) {
     }
 }
 
-function getIntersectedCellKeys(object) {
+function getIntersectedCellKeys(this: SpacialHash, object: GameObject) {
     const { x, y, width, height } = object;
     const { cellSize } = this;
     const cellKeys = [];
