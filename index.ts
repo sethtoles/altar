@@ -1,10 +1,10 @@
-import { cameraFactory } from './camera';
+import { Camera } from './camera';
 import { Character } from './character';
 import { COLOR, FONT, WORLD_MAP } from './constants';
 import { addListeners, clearHeld, handleResize } from './eventHandlers';
-import { gameObjectFactory, GameObject } from './gameObject';
+import { GameObject } from './gameObject';
 import { mapFactory } from './map';
-import { playerFactory } from './player';
+import { Player } from './player';
 import { spacialHashFactory } from './spacialHash';
 import { TILES } from './tiles';
 
@@ -31,7 +31,7 @@ gameLoop();
 // -- FUNCTION DEFINITIONS -- //
 function sceneFactory() {
     const background = mapFactory(WORLD_MAP);
-    const player = playerFactory({
+    const player = new Player({
         sprintSpeed: 5,
     });
     const characters: Character[] = [];
@@ -39,7 +39,7 @@ function sceneFactory() {
     const colliders = spacialHashFactory();
 
 
-    const testingObj = gameObjectFactory({
+    const testingObj = new GameObject({
         x: 300,
         y: 275,
         tileSet: [
@@ -65,7 +65,7 @@ function sceneFactory() {
         characters,
         player,
         colliders,
-        camera: cameraFactory({ following: player }),
+        camera: new Camera({ following: player }),
         paused: false,
     };
 }
@@ -85,14 +85,8 @@ function gameLoop(timer?: number) {
 
     scene.layers.forEach((layer) => {
         layer.forEach((object) => {
-            // TODO: Move to worker
-            if (object.processFrame) {
-                object.processFrame();
-            }
-
-            if (object.render) {
-                object.render(scene.camera);
-            }
+            object.processFrame(); // TODO: Move to worker
+            object.render(scene.camera);
         });
     });
 

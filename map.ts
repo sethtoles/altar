@@ -1,4 +1,4 @@
-import { gameObjectFactory, GameObject } from './gameObject';
+import { GameObject } from './gameObject';
 import { TILES } from './tiles';
 
 type TileName = keyof typeof TILES;
@@ -11,7 +11,7 @@ export function mapFactory(tileMap: TileName[][]) {
             const tile = TILES[tileId];
             const { width, height } = tile;
 
-            const tileObject = gameObjectFactory({
+            const tileObject = new GameObject({
                 tileSet: [
                     {
                         tile,
@@ -28,4 +28,4 @@ export function mapFactory(tileMap: TileName[][]) {
     });
 
     return map;
-};
+}
