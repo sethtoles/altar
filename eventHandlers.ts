@@ -1,7 +1,7 @@
 import { elements, scene, togglePause } from './index';
 import { TILES } from './tiles';
 
-export const held: { [key: number]: true } = {};
+export const held: { [key: string]: true } = {};
 
 export function clearHeld() {
     for (const key in held) {
@@ -10,22 +10,20 @@ export function clearHeld() {
 }
 
 export const KEY = {
-    CLICK: 1,
-    RIGHT_CLICK: 3,
-    SHIFT: 16,
-    ESC: 27,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    ZERO: 48,
-    A: 65,
-    D: 68,
-    S: 83,
-    W: 87,
-    CMD: 224,
-    EQUALS: 61,
-    MINUS: 173,
+    SHIFT: 'ShiftLeft',
+    ESC: 'Escape',
+    LEFT: 'ArrowLeft',
+    UP: 'ArrowUp',
+    RIGHT: 'ArrowRight',
+    DOWN: 'ArrowDown',
+    ZERO: 'Digit0',
+    A: 'KeyA',
+    D: 'KeyD',
+    S: 'KeyS',
+    W: 'KeyW',
+    CMD: 'OSLeft',
+    EQUALS: 'Equal',
+    MINUS: 'Minus',
 };
 
 export function addListeners() {
@@ -39,10 +37,10 @@ export function addListeners() {
     window.addEventListener('contextmenu', event => event.preventDefault());
 
     function handleKeyDown(event: KeyboardEvent) {
-        held[event.which] = true;
-        console.log('key', event.which);
+        held[event.code] = true;
+        console.log('key', event.code);
 
-        switch (event.which) {
+        switch (event.code) {
             case KEY.ESC:
                 togglePause();
                 break;
@@ -59,7 +57,7 @@ export function addListeners() {
     }
 
     function handleKeyUp(event: KeyboardEvent) {
-        delete held[event.which];
+        delete held[event.code];
     }
 
     function handleMouseDown(event: MouseEvent) {
