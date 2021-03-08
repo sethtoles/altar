@@ -1,6 +1,6 @@
 import { Camera } from './camera';
 import { Character } from './character';
-import { COLOR, FONT, WORLD_MAP } from './constants';
+import { FRAME_RATE, COLOR, FONT, WORLD_MAP } from './constants';
 import { addListeners, clearHeld, handleResize } from './eventHandlers';
 import { GameObject } from './gameObject';
 import { mapFactory } from './map';
@@ -19,6 +19,7 @@ export const ctx = elements.canvas.getContext('2d');
 // Game State
 export const scene = sceneFactory();
 let elapsed = 0;
+let frame = 1;
 
 // Environment Setup
 addListeners();
@@ -76,8 +77,9 @@ function gameLoop(timer?: number) {
     }
 
     const frameTime = timer - elapsed;
-    const extraTime = Math.min(0, 25 - frameTime); // Limit to 40fps
+    const extraTime = Math.min(0, (1000 / FRAME_RATE) - frameTime); // Limit to 40fps
     elapsed = timer;
+    frame++;
 
     clearScreen();
 
@@ -85,7 +87,7 @@ function gameLoop(timer?: number) {
 
     scene.layers.forEach((layer) => {
         layer.forEach((object) => {
-            object.processFrame(); // TODO: Move to worker
+            object.processFrame(frame); // TODO: Move to worker
             object.render(scene.camera);
         });
     });

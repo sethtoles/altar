@@ -1,3 +1,5 @@
+export const FRAME_RATE = 40;
+
 export const COLOR = {
     WHITE: '#ffffff',
     BLACK: '#000000',

@@ -22,8 +22,9 @@ export class Player extends Character {
         Object.assign(this, options);
     }
 
-    processFrame() {
+    processFrame(frame: number) {
         this.checkForMovement();
+        super.processFrame(frame);
     }
 
     checkForMovement() {
@@ -32,14 +33,14 @@ export class Player extends Character {
         const up = held[KEY.W] ? 1 : 0;
         const down = held[KEY.S] ? 1 : 0;
 
-        this.isSprinting = !!held[KEY.SHIFT];
+        this.isSprinting = held[KEY.SHIFT];
 
         if (right || left || up || down) {
             this.clearTargets();
 
             this.moveToward(
                 right - left,
-                up - down
+                down - up
             );
         }
         else if (this.hasTarget()) {

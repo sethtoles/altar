@@ -1,13 +1,13 @@
 import { GameObject } from './gameObject';
 import { TILES } from './tiles';
-
-const SPRINT_MODIFIER = 1.03;
+import { ctx } from './index';
+import { Camera } from './camera';
 
 export class Character extends GameObject {
-    baseSpeed = 1;
-    speed: number;
-    sprintSpeed = 3;
+    baseSpeed = 2;
+    sprintSpeed = 5;
     isSprinting = false;
+    inertia = 10;
     maxStamina = 5;
     stamina: number;
     targets: GameObject[] = [];
@@ -20,39 +20,35 @@ export class Character extends GameObject {
     constructor(options?: Partial<Character>) {
         super(options);
 
-        this.speed = this.baseSpeed;
         this.stamina = this.maxStamina;
 
         Object.assign(this, options);
     }
 
-    getSpeed() {
-        if (this.isSprinting) {
-            const newSpeed = this.speed * SPRINT_MODIFIER;
-            this.speed = Math.min(this.sprintSpeed, newSpeed);
-        }
-        else {
-            this.speed = (this.speed + this.baseSpeed) / 2;
+    moveToward(targetX: number, targetY: number) {
+        if (!targetX && !targetY) {
+            return;
         }
 
-        return this.speed;
-    }
+        const maxSpeed = this.isSprinting ? this.sprintSpeed : this.baseSpeed;
 
-    moveToward(directionX: number, directionY: number) {
-        const speed = this.getSpeed();
+        // Scale movement units based on angle.
+        const angle = Math.atan2(targetX, targetY);
+        const unitX = Math.sin(angle) * maxSpeed;
+        const unitY = Math.cos(angle) * maxSpeed;
 
-        if (directionX && directionY) {
-            const angle = Math.atan2(directionX, directionY);
+        // Average the desired velocity with the current velocity, weighted by inertia.
+        const [velocityX, velocityY] = this.velocity;
+        const averageX = (unitX + velocityX * this.inertia) / (this.inertia + 1);
+        const averageY = (unitY + velocityY * this.inertia) / (this.inertia + 1);
 
-            directionX = Math.sin(angle);
-            directionY = Math.cos(angle);
-        }
+        // TODO: check if target is within some range (velocity * inertia?) and slow down if so.
 
-        this.move(directionX * speed, -directionY * speed);
+        this.move(averageX, averageY);
     }
 
     hasTarget() {
-        return this.targets.length;
+        return !!this.targets.length;
     }
 
     addTarget(targetOptions?: Partial<GameObject>) {
@@ -65,35 +61,44 @@ export class Character extends GameObject {
         const index = this.targets.indexOf(target);
 
         if (index >= 0) {
-            return this.targets.splice(index, 1);
+            this.targets.splice(index, 1);
         }
     }
 
     clearTargets() {
-        const { length } = this.targets;
-
-        for (let i = length - 1; i >= 0; i--) {
-            this.removeTarget(this.targets[i]);
-        }
+        // this.targets must be mutated because the world has a reference to it.
+        this.targets.forEach(this.removeTarget.bind(this));
     }
 
     approachTarget() {
         const target = this.targets[0];
-        const speed = this.getSpeed();
-
         const directionX = target.x - this.x;
-        const directionY = this.y - target.y;
+        const directionY = target.y - this.y;
+        
+        this.moveToward(directionX, directionY);
 
-        if (
-            Math.abs(directionX) < speed
-            && Math.abs(directionY) < speed
-        ) {
+        const moveComplete = (
+            Math.abs(this.x - target.x) < Math.abs(this.velocity[0])
+            && Math.abs(this.y - target.y) < Math.abs(this.velocity[1])
+        );
+
+        if (moveComplete) {
             this.x = target.x;
             this.y = target.y;
             this.removeTarget(target);
         }
-        else {
-            this.moveToward(directionX, directionY);
-        }
+    }
+
+    render(camera: Camera) {
+        super.render(camera);
+
+        const [velocityX, velocityY] = this.velocity;
+        const x = (this.x - camera.x) * camera.zoom;
+        const y = (this.y + this.height - camera.y) * camera.zoom;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + velocityX * 100, y + velocityY * 100);
+        ctx.stroke();
     }
 }
