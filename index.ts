@@ -26,7 +26,6 @@ addListeners();
 handleResize();
 
 // Game Start
-scene.camera.zoomChanged()
 gameLoop();
 
 // -- FUNCTION DEFINITIONS -- //

@@ -1,3 +1,5 @@
+import { TileName } from "./tiles";
+
 export const FRAME_RATE = 40;
 
 export const COLOR = {
@@ -14,7 +16,7 @@ export const DEFAULT_PROP = {
     HEIGHT: 32,
 };
 
-export const WORLD_MAP = [
+export const WORLD_MAP: TileName[][] = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],

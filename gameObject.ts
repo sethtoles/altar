@@ -1,5 +1,6 @@
 import { Camera } from './camera';
 import { DEFAULT_PROP, FRAME_RATE } from './constants';
+import { intersects } from './helpers';
 import { ctx, scene } from './index';
 import { Cell } from './spacialHash';
 import { Tile } from './tiles';
@@ -73,7 +74,7 @@ export class GameObject {
                 siblings.forEach((sibling) => {
                     // Ensure we're checking another element, and that it overlaps this one.
                     // TODO: Trace along movement path to determine illegal moves.
-                    if (this !== sibling && this.intersects(sibling)) {
+                    if (this !== sibling && intersects(this, sibling)) {
                         // Determine amount of x overlap:
                         // Positive value indicates this is to the left of sibling,
                         // negative indicates this is to the right.
@@ -112,34 +113,19 @@ export class GameObject {
         }
     }
 
-    intersects(target: GameObject) {
-        const top = this.y;
-        const bottom = top + this.height;
-
-        const targetTop = target.y;
-        if (bottom < targetTop) return false; // This is above the target.
-
-        const targetBottom = targetTop + target.height;
-        if (top > targetBottom) return false; // This is below the target.
-
-        const left = this.x;
-        const right = left + this.width;
-
-        const targetLeft = target.x;
-        if (right < targetLeft) return false; // This is left of the target.
-
-        const targetRight = targetLeft + target.width;
-        if (left > targetRight) return false; // This is right of the target.
-
-        return true;
-    }
-
     render(camera: Camera) {
         this.tileSet?.forEach(({ tile, x = 0, y = 0 }) => {
             const tileX = this.x + x;
             const tileY = this.y + y;
 
-            if (!this.intersects(camera)) return;
+            const tileRect = {
+                x: tileX,
+                y: tileY,
+                width: tile.width,
+                height: tile.height,
+            };
+
+            if (!intersects(tileRect, camera)) return;
 
             ctx.drawImage(
                 tile.image,

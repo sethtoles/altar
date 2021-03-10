@@ -6,16 +6,30 @@ import tile_3 from 'url:./tiles/tile_3.png';
 import tile_4 from 'url:./tiles/tile_4.png';
 
 export type Tile = {
-    src: string;
-    width?: number;
-    height?: number;
-    image?: HTMLImageElement;
+    width: number;
+    height: number;
+    image: HTMLImageElement;
 }
 
-// TODO: Make stricter index with only specified keys.
-type TileMap = { [key: string]: Tile;}
+interface TileOptions extends Partial<Tile> {
+    src: string;
+}
 
-export const TILES: TileMap = {
+function buildTile(options: TileOptions) {
+    const { src, ...tileData } = options;
+    const image = new Image();
+    
+    image.src = src;
+
+    return {
+        width: DEFAULT_PROP.WIDTH,
+        height: DEFAULT_PROP.HEIGHT,
+        image,
+        ...tileData,
+    }
+}
+
+const tileConfig = {
     0: {
         src: tile_0,
     },
@@ -33,14 +47,12 @@ export const TILES: TileMap = {
         src: tile_4,
         width: 20,
     },
-};
+} as const;
 
-for (const key in TILES) {
-    const tile = TILES[key];
+export type TileName = keyof typeof tileConfig;
+type Tiles = { [name in TileName]: Tile };
 
-    tile.image = new Image();
-    tile.image.src = tile.src;
-
-    tile.width = tile.width || DEFAULT_PROP.WIDTH;
-    tile.height = tile.height || DEFAULT_PROP.HEIGHT;
-}
+export const TILES = (Object.keys(tileConfig) as TileName[]).reduce((acc, tileName) => ({
+    ...acc,
+    [tileName]: buildTile(tileConfig[tileName]),
+}), {}) as Tiles;

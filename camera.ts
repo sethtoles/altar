@@ -7,7 +7,11 @@ const SMOOTH_AMOUNT = 0.95;
 // Scale factor of sprite pixel to screen pixel.
 const DEFAULT_ZOOM = 1;
 
-export class Camera extends GameObject {
+export class Camera {
+    x = 0;
+    y = 0;
+    width = 0;
+    height = 0;
     zoom = DEFAULT_ZOOM;
     zoomLevels = [0.7, DEFAULT_ZOOM, 2, 4];
     smooth = true;
@@ -15,10 +19,10 @@ export class Camera extends GameObject {
     centerX = 0;
     centerY = 0;
 
-    constructor(options?: Partial<Camera>) {
-        super(options);
-
+    constructor(options?: Partial<Camera>) {        
         Object.assign(this, options);
+
+        this.zoomChanged();
     }
 
     zoomIn() {

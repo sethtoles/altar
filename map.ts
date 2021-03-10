@@ -1,7 +1,5 @@
 import { GameObject } from './gameObject';
-import { TILES } from './tiles';
-
-type TileName = keyof typeof TILES;
+import { TILES, TileName } from './tiles';
 
 export function mapFactory(tileMap: TileName[][]) {
     const map: GameObject[] = [];
