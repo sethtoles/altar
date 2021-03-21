@@ -97,11 +97,9 @@ export class GameObject {
                         // allowing this object to hug the edge of its sibling.
                         if (absOverlapX < absOverlapY) {
                             this.x -= overlapX;
-                        }
-                        else if (absOverlapX > absOverlapY) {
+                        } else if (absOverlapX > absOverlapY) {
                             this.y -= overlapY;
-                        }
-                        else {
+                        } else {
                             this.x -= overlapX;
                             this.y -= overlapY;
                         }

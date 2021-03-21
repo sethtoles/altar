@@ -28,10 +28,13 @@ export class Player extends Character {
     }
 
     checkForMovement() {
-        const right = held[KEY.D] ? 1 : 0;
-        const left = held[KEY.A] ? 1 : 0;
-        const up = held[KEY.W] ? 1 : 0;
-        const down = held[KEY.S] ? 1 : 0;
+        // Ensure that manual movement targets are outside the bounds of moveToward damping.
+        const desiredMoveDistance = this.sprintSpeed * this.inertia;
+        
+        const right = held[KEY.D] ? desiredMoveDistance : 0;
+        const left = held[KEY.A] ? desiredMoveDistance : 0;
+        const up = held[KEY.W] ? desiredMoveDistance : 0;
+        const down = held[KEY.S] ? desiredMoveDistance : 0;
 
         this.isSprinting = held[KEY.SHIFT];
 

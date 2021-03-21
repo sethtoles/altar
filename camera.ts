@@ -13,7 +13,7 @@ export class Camera {
     width = 0;
     height = 0;
     zoom = DEFAULT_ZOOM;
-    zoomLevels = [0.7, DEFAULT_ZOOM, 2, 4];
+    zoomLevels = [0.7, DEFAULT_ZOOM, 2];
     smooth = true;
     following: GameObject | null = null;
     centerX = 0;

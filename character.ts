@@ -39,10 +39,20 @@ export class Character extends GameObject {
 
         // Average the desired velocity with the current velocity, weighted by inertia.
         const [velocityX, velocityY] = this.velocity;
-        const averageX = (unitX + velocityX * this.inertia) / (this.inertia + 1);
-        const averageY = (unitY + velocityY * this.inertia) / (this.inertia + 1);
+        const weightedVelocityX = velocityX * this.inertia;
+        const weightedVelocityY = velocityY * this.inertia;
+        let averageX = (unitX + weightedVelocityX) / (this.inertia + 1);
+        let averageY = (unitY + weightedVelocityY) / (this.inertia + 1);
 
-        // TODO: check if target is within some range (velocity * inertia?) and slow down if so.
+        // Scale X movement if nearing target.
+        if (Math.abs(targetX) < Math.abs(weightedVelocityX)) {
+            averageX *= 0.9;
+        }
+
+        // Scale Y movement if nearing target.
+        if (Math.abs(targetY) < Math.abs(weightedVelocityY)) {
+            averageY *= 0.9;
+        }
 
         this.move(averageX, averageY);
     }
