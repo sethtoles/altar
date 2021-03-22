@@ -15,8 +15,8 @@ export class GameObject {
     x = 0;
     y = 0;
     private previous: [number, number];
-    velocity = [0, 0];
-    moved = false;
+    velocity: [number, number] = [0, 0];
+    private moved = false;
     width = DEFAULT_PROP.WIDTH;
     height = DEFAULT_PROP.HEIGHT;
     containers?: Cell[];

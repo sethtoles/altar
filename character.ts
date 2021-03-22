@@ -2,14 +2,19 @@ import { GameObject } from './gameObject';
 import { TILES } from './tiles';
 import { ctx } from './index';
 import { Camera } from './camera';
+import { FRAME_RATE } from './constants';
+import { vectorLength } from './helpers';
+
+type Status = 'exhausted';
 
 export class Character extends GameObject {
     baseSpeed = 2;
-    sprintSpeed = 5;
+    maxSpeed = 5;
     isSprinting = false;
     inertia = 10;
-    maxStamina = 5;
+    maxStamina = 50;
     stamina: number;
+    statuses: Partial<{ [status in Status]: { ticks: number} }> = {};
     targets: GameObject[] = [];
     tileSet: GameObject['tileSet'] = [
         {
@@ -30,7 +35,7 @@ export class Character extends GameObject {
             return;
         }
 
-        const maxSpeed = this.isSprinting ? this.sprintSpeed : this.baseSpeed;
+        const maxSpeed = !this.statuses.exhausted && this.isSprinting ? this.maxSpeed : this.baseSpeed;
 
         // Scale movement units based on angle.
         const angle = Math.atan2(targetX, targetY);
@@ -55,6 +60,39 @@ export class Character extends GameObject {
         }
 
         this.move(averageX, averageY);
+    }
+
+    processFrame(frame: number) {
+        super.processFrame(frame);
+
+        const isExhausted = this.statuses.exhausted;
+
+        // Stamina is locked at 0 for 5 seconds into exhaustion.
+        if (!isExhausted || this.statuses.exhausted.ticks < FRAME_RATE * 5) {
+            // Adjust stamina based on movement amount.
+            const moveAmount = vectorLength(this.velocity);
+
+            // Stamina regenerates while moving under baseSpeed.
+            if (moveAmount <= this.baseSpeed * 1.1) {
+                this.stamina = Math.min(this.stamina + 0.1, this.maxStamina);
+            } else {
+                const exertion = (moveAmount - this.baseSpeed) / (this.maxSpeed - this.baseSpeed);
+                this.stamina = Math.max(0, this.stamina - exertion * 0.2);
+            }
+        }
+
+        // If character has just run out of stamina...
+        if (!this.stamina && !isExhausted) {
+            // Set the exhausted status for 10 seconds.
+            this.statuses.exhausted = { ticks: FRAME_RATE * 10 };
+        } else if (isExhausted) {
+            const newValue = Math.max(0, this.statuses.exhausted.ticks - 1)
+            this.statuses.exhausted.ticks = newValue;
+
+            if (newValue === 0 && this.stamina === this.maxStamina) {
+                delete this.statuses.exhausted;
+            }
+        }
     }
 
     hasTarget() {

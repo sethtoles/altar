@@ -13,3 +13,7 @@ export const intersects = (rect1: Rect, rect2: Rect) => {
 
     return true;
 }
+
+export const vectorLength = ([x, y]: [number, number]) => Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+export const clamp = (min: number, value: number, max: number) => Math.min(Math.max(value, min), max);

@@ -10,7 +10,8 @@ import { TILES } from './tiles';
 
 // Stored Elements
 export const elements = {
-    canvas: document.getElementById('gameLayer') as HTMLCanvasElement,
+    canvas: document.querySelector<HTMLCanvasElement>('#gameLayer'),
+    staminaMeter: document.querySelector<HTMLDivElement>('#stamina'),
 };
 
 // Canvas State
@@ -32,7 +33,7 @@ gameLoop();
 function sceneFactory() {
     const background = mapFactory(WORLD_MAP);
     const player = new Player({
-        sprintSpeed: 5,
+        maxSpeed: 5,
     });
     const characters: Character[] = [];
     const props: GameObject[] = [];
@@ -90,6 +91,10 @@ function gameLoop(timer?: number) {
             object.render(scene.camera);
         });
     });
+
+    const staminaMeter = elements.staminaMeter;
+    staminaMeter.style.width = `${(scene.player.stamina / scene.player.maxStamina) * 100}%`
+    staminaMeter.parentElement.classList.toggle('inactive', !!scene.player.statuses.exhausted);
 
     setTimeout(() => {
         window.requestAnimationFrame(gameLoop);

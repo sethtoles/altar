@@ -29,7 +29,7 @@ export class Player extends Character {
 
     checkForMovement() {
         // Ensure that manual movement targets are outside the bounds of moveToward damping.
-        const desiredMoveDistance = this.sprintSpeed * this.inertia;
+        const desiredMoveDistance = this.maxSpeed * this.inertia;
         
         const right = held[KEY.D] ? desiredMoveDistance : 0;
         const left = held[KEY.A] ? desiredMoveDistance : 0;

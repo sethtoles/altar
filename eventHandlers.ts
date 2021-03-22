@@ -38,7 +38,7 @@ export function addListeners() {
 
     function handleKeyDown(event: KeyboardEvent) {
         held[event.code] = true;
-        console.log('key', event.code);
+        // console.log('key', event.code);
 
         switch (event.code) {
             case KEY.ESC:

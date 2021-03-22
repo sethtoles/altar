@@ -1,6 +1,6 @@
 import { TileName } from "./tiles";
 
-export const FRAME_RATE = 40;
+export const FRAME_RATE = 30;
 
 export const COLOR = {
     WHITE: '#ffffff',
